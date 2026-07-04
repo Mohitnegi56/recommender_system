@@ -1,13 +1,36 @@
-import fitz
 import os
+import streamlit as st
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-from groq import RateLimitError
 
 
 load_dotenv()
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+def get_secret(key):
+    # Streamlit Cloud
+    try:
+        return st.secrets[key]
+    except (KeyError, FileNotFoundError):
+        # Local development with .env
+        return os.getenv(key)
+
+
+GROQ_API_KEY = get_secret("GROQ_API_KEY")
+
+
+def ask_groq(prompt, max_tokens=500):
+
+    llm = ChatGroq(
+        model="llama-3.1-8b-instant",
+        temperature=0.5,
+        max_tokens=max_tokens,
+        api_key=GROQ_API_KEY
+    )
+
+    response = llm.invoke(prompt)
+
+    return response.content
 
 
 def extract_text_from_pdf(uploaded_file):
@@ -22,23 +45,3 @@ def extract_text_from_pdf(uploaded_file):
         text += page.get_text()
 
     return text
-
-
-def ask_groq(prompt, max_tokens=500):
-
-    llm = ChatGroq(
-        model="llama-3.1-8b-instant",
-        temperature=0.5,
-        max_tokens=max_tokens,
-        api_key=GROQ_API_KEY
-    )
-
-    try:
-        response = llm.invoke(prompt)
-        return response.content
-
-    except RateLimitError:
-        return (
-            "Groq API rate limit reached. "
-            "Please wait a few minutes and try again."
-        )

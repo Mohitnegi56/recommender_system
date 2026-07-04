@@ -1,11 +1,23 @@
 import os
 from urllib.parse import quote_plus
+import streamlit as st
 from dotenv import load_dotenv
 from apify_client import ApifyClient
 
+
 load_dotenv()
 
-client = ApifyClient(os.getenv("APIFY_API_TOKEN"))
+
+def get_secret(key):
+    try:
+        return st.secrets[key]
+    except (KeyError, FileNotFoundError):
+        return os.getenv(key)
+
+
+APIFY_API_TOKEN = get_secret("APIFY_API_TOKEN")
+
+client = ApifyClient(APIFY_API_TOKEN)
 
 def fetch_linkedin_jobs(search_query, location="India", rows=60):
 
