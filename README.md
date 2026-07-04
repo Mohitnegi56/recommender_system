@@ -5,7 +5,7 @@ An AI-powered job recommendation and resume analysis system. Upload your resume 
 ---
 
 ## 🔗 Live Application Link
-🚀 **Try the app here:** [Add your live deployment link here](https://your-deployment-link-here.com)
+🚀 **Try the app here:** [LINK DEMO]([https://your-deployment-link-here.com](https://recommendersystem-uvfuwzf964kyu5k25dpjm6.streamlit.app/))
 
 ---
 
