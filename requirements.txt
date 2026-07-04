@@ -1,0 +1,9 @@
+streamlit
+groq
+pymupdf
+python-dotenv
+langgraph==1.2.2
+langchain==1.3.2
+langchain-groq==1.1.3
+langchain-community==0.4.2
+apify-client
