@@ -1,4 +1,5 @@
 import os
+import fitz
 import streamlit as st
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
@@ -19,13 +20,19 @@ def get_secret(key):
 GROQ_API_KEY = get_secret("GROQ_API_KEY")
 
 
-def ask_groq(prompt, max_tokens=500):
+def ask_groq(prompt, max_tokens=500, api_key=None):
+    key = api_key or GROQ_API_KEY
+    if not key:
+        raise ValueError(
+            "Groq API Key is not set. Please add it to your environment variables, "
+            "Streamlit Secrets, or input it in the sidebar."
+        )
 
     llm = ChatGroq(
         model="llama-3.1-8b-instant",
         temperature=0.5,
         max_tokens=max_tokens,
-        api_key=GROQ_API_KEY
+        api_key=key
     )
 
     response = llm.invoke(prompt)

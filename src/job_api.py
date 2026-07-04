@@ -17,9 +17,15 @@ def get_secret(key):
 
 APIFY_API_TOKEN = get_secret("APIFY_API_TOKEN")
 
-client = ApifyClient(APIFY_API_TOKEN)
 
-def fetch_linkedin_jobs(search_query, location="India", rows=60):
+def fetch_linkedin_jobs(search_query, location="India", rows=60, api_token=None):
+    token = api_token or APIFY_API_TOKEN
+    if not token:
+        raise ValueError(
+            "Apify API Token is not set. Please add it to your environment variables, "
+            "Streamlit Secrets, or input it in the sidebar."
+        )
+    client = ApifyClient(token)
 
     search_url = (
         "https://www.linkedin.com/jobs/search/"
@@ -40,15 +46,23 @@ def fetch_linkedin_jobs(search_query, location="India", rows=60):
     ).call(run_input=run_input)
 
     jobs = list(
-    client.dataset(
-        run.default_dataset_id
-    ).iterate_items()
-)
+        client.dataset(
+            run.default_dataset_id
+        ).iterate_items()
+    )
 
     return jobs
 
 
-def fetch_naukri_jobs(search_query, location="India", rows=60):
+def fetch_naukri_jobs(search_query, location="India", rows=60, api_token=None):
+    token = api_token or APIFY_API_TOKEN
+    if not token:
+        raise ValueError(
+            "Apify API Token is not set. Please add it to your environment variables, "
+            "Streamlit Secrets, or input it in the sidebar."
+        )
+    client = ApifyClient(token)
+
     run_input = {
         "keyword": search_query,
         "maxJobs": rows,
@@ -62,9 +76,9 @@ def fetch_naukri_jobs(search_query, location="India", rows=60):
     ).call(run_input=run_input)
 
     jobs = list(
-    client.dataset(
-        run.default_dataset_id
-    ).iterate_items()
-)
+        client.dataset(
+            run.default_dataset_id
+        ).iterate_items()
+    )
 
-    return jobs
+    return jobs
