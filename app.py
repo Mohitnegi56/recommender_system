@@ -12,26 +12,29 @@ apify_token = None
 
 with st.sidebar:
     st.header("🔑 API Configurations")
-    from src.helper import GROQ_API_KEY
-    from src.job_api import APIFY_API_TOKEN
+    from src.helper import get_secret
+    
+    groq_api_key_env = get_secret("GROQ_API_KEY")
+    apify_api_token_env = get_secret("APIFY_API_TOKEN")
     
     # Check/Request Groq API Key
-    if not GROQ_API_KEY:
+    if not groq_api_key_env:
         groq_key = st.text_input("Enter Groq API Key:", type="password", help="Needed to analyze your resume.")
         if not groq_key:
             st.warning("⚠️ Groq API Key is required to analyze your resume.")
     else:
         st.success("✅ Groq API Key is loaded!")
-        groq_key = GROQ_API_KEY
+        groq_key = groq_api_key_env
         
     # Check/Request Apify Token
-    if not APIFY_API_TOKEN:
+    if not apify_api_token_env:
         apify_token = st.text_input("Enter Apify API Token:", type="password", help="Needed to fetch live jobs from LinkedIn/Naukri.")
         if not apify_token:
             st.info("💡 Enter Apify Token to enable job recommendations.")
     else:
         st.success("✅ Apify API Token is loaded!")
-        apify_token = APIFY_API_TOKEN
+        apify_token = apify_api_token_env
+
 
 uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
 

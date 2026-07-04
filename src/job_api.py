@@ -11,15 +11,13 @@ load_dotenv()
 def get_secret(key):
     try:
         return st.secrets[key]
-    except (KeyError, FileNotFoundError):
+    except Exception:
         return os.getenv(key)
 
 
-APIFY_API_TOKEN = get_secret("APIFY_API_TOKEN")
-
-
 def fetch_linkedin_jobs(search_query, location="India", rows=60, api_token=None):
-    token = api_token or APIFY_API_TOKEN
+    token = api_token or get_secret("APIFY_API_TOKEN")
+
     if not token:
         raise ValueError(
             "Apify API Token is not set. Please add it to your environment variables, "
@@ -55,7 +53,8 @@ def fetch_linkedin_jobs(search_query, location="India", rows=60, api_token=None)
 
 
 def fetch_naukri_jobs(search_query, location="India", rows=60, api_token=None):
-    token = api_token or APIFY_API_TOKEN
+    token = api_token or get_secret("APIFY_API_TOKEN")
+
     if not token:
         raise ValueError(
             "Apify API Token is not set. Please add it to your environment variables, "

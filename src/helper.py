@@ -9,19 +9,16 @@ load_dotenv()
 
 
 def get_secret(key):
-    # Streamlit Cloud
+    # Streamlit Cloud or local secrets
     try:
         return st.secrets[key]
-    except (KeyError, FileNotFoundError):
-        # Local development with .env
+    except Exception:
+        # Local development with .env or environment variable
         return os.getenv(key)
 
 
-GROQ_API_KEY = get_secret("GROQ_API_KEY")
-
-
 def ask_groq(prompt, max_tokens=500, api_key=None):
-    key = api_key or GROQ_API_KEY
+    key = api_key or get_secret("GROQ_API_KEY")
     if not key:
         raise ValueError(
             "Groq API Key is not set. Please add it to your environment variables, "
