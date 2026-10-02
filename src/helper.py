@@ -26,10 +26,10 @@ def ask_groq(prompt, max_tokens=500, api_key=None):
         )
 
     llm = ChatGroq(
-        model="llama-3.1-8b-instant",
-        temperature=0.5,
+        model="openai/gpt-oss-120b",
+        api_key=api_key,
         max_tokens=max_tokens,
-        api_key=key
+        temperature=0
     )
 
     response = llm.invoke(prompt)
